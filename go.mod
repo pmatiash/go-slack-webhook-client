@@ -1,4 +1,4 @@
-module go-slack-webhook-client
+module github.com/pmatiash/go-slack-webhook-client
 
 go 1.21
 
