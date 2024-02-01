@@ -69,11 +69,12 @@ func (wc *WebhookClient) send(m *Message) error {
 
 	client := &http.Client{Timeout: wc.Config.Timeout}
 	resp, err := client.Do(req)
-	defer resp.Body.Close()
 
 	if err != nil {
 		return err
 	}
+
+	defer resp.Body.Close()
 
 	buf := new(bytes.Buffer)
 	_, err = buf.ReadFrom(resp.Body)
