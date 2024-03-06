@@ -20,6 +20,7 @@ type WCConfig struct {
 	Username string
 	Channel  string
 	Timeout  time.Duration
+	Headers  map[string]string
 }
 
 type WebhookClient struct {
@@ -62,7 +63,12 @@ func (wc *WebhookClient) send(m *Message) error {
 		return err
 	}
 
-	req.Header.Add("Content-Type", "application/json")
+	if len(wc.Config.Headers) > 0 {
+		for key, value := range wc.Config.Headers {
+			req.Header.Add(key, value)
+		}
+	}
+
 	if wc.Config.Timeout == 0 {
 		wc.Config.Timeout = DefaultTimeout
 	}
