@@ -16,10 +16,10 @@ const (
 )
 
 type WCConfig struct {
-	Webhook  string
-	Username string
-	Channel  string
-	Timeout  time.Duration
+	Webhook string
+	Channel string
+	Timeout time.Duration
+	Headers map[string]string
 }
 
 type WebhookClient struct {
@@ -38,7 +38,6 @@ type Block struct {
 }
 
 type Message struct {
-	Username  string  `json:"username,omitempty"`
 	IconEmoji string  `json:"icon_emoji,omitempty"`
 	Channel   string  `json:"channel,omitempty"`
 	Blocks    []Block `json:"blocks,omitempty"`
@@ -62,18 +61,24 @@ func (wc *WebhookClient) send(m *Message) error {
 		return err
 	}
 
-	req.Header.Add("Content-Type", "application/json")
+	if len(wc.Config.Headers) > 0 {
+		for key, value := range wc.Config.Headers {
+			req.Header.Add(key, value)
+		}
+	}
+
 	if wc.Config.Timeout == 0 {
 		wc.Config.Timeout = DefaultTimeout
 	}
 
 	client := &http.Client{Timeout: wc.Config.Timeout}
 	resp, err := client.Do(req)
-	defer resp.Body.Close()
 
 	if err != nil {
 		return err
 	}
+
+	defer resp.Body.Close()
 
 	buf := new(bytes.Buffer)
 	_, err = buf.ReadFrom(resp.Body)
