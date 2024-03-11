@@ -16,11 +16,10 @@ const (
 )
 
 type WCConfig struct {
-	Webhook  string
-	Username string
-	Channel  string
-	Timeout  time.Duration
-	Headers  map[string]string
+	Webhook string
+	Channel string
+	Timeout time.Duration
+	Headers map[string]string
 }
 
 type WebhookClient struct {
@@ -39,7 +38,6 @@ type Block struct {
 }
 
 type Message struct {
-	Username  string  `json:"username,omitempty"`
 	IconEmoji string  `json:"icon_emoji,omitempty"`
 	Channel   string  `json:"channel,omitempty"`
 	Blocks    []Block `json:"blocks,omitempty"`
